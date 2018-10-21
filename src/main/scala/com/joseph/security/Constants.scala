@@ -1,4 +1,4 @@
-package com.joseph.spareapi.security
+package com.joseph.security
 
 object Constants {
   val EXPIRATION_TIME:Long=864000000//10 days

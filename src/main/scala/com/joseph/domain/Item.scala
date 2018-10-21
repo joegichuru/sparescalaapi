@@ -1,5 +1,6 @@
-package com.joseph.spareapi.domain
+package com.joseph.domain
 
+import domain._
 import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.validation.constraints.NotNull
 import org.springframework.data.annotation.Id

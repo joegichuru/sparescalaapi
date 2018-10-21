@@ -1,9 +1,9 @@
-package com.joseph.spareapi.security
+package com.joseph.security
 
 import java.util
 
-import com.joseph.spareapi.dao.services.UserService
-import com.joseph.spareapi.domain.User
+import com.joseph.dao.services.UserService
+import com.joseph.domain.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.{UserDetails, UserDetailsService, UsernameNotFoundException}
 import org.springframework.stereotype.Service

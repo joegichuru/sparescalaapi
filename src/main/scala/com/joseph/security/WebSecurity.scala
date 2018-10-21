@@ -1,7 +1,6 @@
-package com.joseph.spareapi.security
+package com.joseph.security
 
-
-import com.joseph.spareapi.dao.services.UserService
+import com.joseph.dao.services.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder

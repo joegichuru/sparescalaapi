@@ -1,4 +1,4 @@
-package com.joseph.spareapi.security
+package com.joseph.security
 
 import java.util
 import java.util.Date
@@ -7,10 +7,10 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm.HMAC512
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.google.gson.{ExclusionStrategy, FieldAttributes, Gson, GsonBuilder}
-import com.joseph.spareapi.dao.services.UserService
+import com.joseph.dao.services.UserService
+import com.joseph.domain.User
 import org.springframework.http.HttpHeaders
-//import org.springframework.security.core.userdetails.User
-import com.joseph.spareapi.domain.User
+//import org.springframework.com.joseph.security.core.userdetails.User
 import javax.servlet.FilterChain
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.springframework.security.authentication.{AuthenticationManager, UsernamePasswordAuthenticationToken}

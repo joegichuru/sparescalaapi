@@ -1,4 +1,4 @@
-package com.joseph.spareapi
+package com.joseph.domain
 
 package object domain {
   val MONTH="month"

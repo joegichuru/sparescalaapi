@@ -1,6 +1,6 @@
-package com.joseph.spareapi.dao.repositories
+package com.joseph.dao.repositories
 
-import com.joseph.spareapi.domain.Comment
+import com.joseph.domain.Comment
 import org.springframework.data.domain.{Page, Pageable}
 import org.springframework.data.mongodb.repository.MongoRepository
 

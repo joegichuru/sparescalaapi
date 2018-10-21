@@ -9,15 +9,15 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
-
+apply plugin: 'scala'
 apply plugin: 'java'
 //apply plugin: 'war'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-apply plugin: 'scala'
+
 apply plugin: 'application'
-apply plugin: 'maven'
+
 
 group = 'com.joseph'
 version = '0.0.1'
@@ -44,6 +44,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-rest')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile("org.springframework.boot:spring-boot-starter-actuator")
+    compile("org.springframework.boot:spring-boot-starter-mail")
    // compile 'com.github.jsimone:webapp-runner:8.5.11.3'
     //for war packaging
 //    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
@@ -62,34 +63,7 @@ dependencies {
     testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
     compile 'org.scala-lang:scala-library:2.11.12'
 }
-//task stage() {
-//    dependsOn clean, war
-//}
-//war.mustRunAfter clean
-//
-//task copyToLib(type: Copy) {
-//    into "$buildDir/server"
-//    from(configurations.compile) {
-//        include "webapp-runner*"
-//    }
-//}
-//
-//stage.dependsOn(copyToLib)
 
-task writeNewPom << {
-    pom {
-        project {
-            inceptionYear '2018'
-            licenses {
-                license {
-                    name 'The Apache Software License, Version 2.0'
-                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    distribution 'repo'
-                }
-            }
-        }
-    }.writeTo("pom.xml")
-}
 
 //to run pring boot app in server
 task mainInit(type: JavaExec, dependsOn: classes) {

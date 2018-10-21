@@ -1,6 +1,6 @@
-//package com.joseph.spareapi.converters
+//package com.joseph.spareapi.com.joseph.converters
 //
-//import com.joseph.spareapi.domain.User
+//import com.joseph.domain.User
 //import com.mongodb.{BasicDBObject, DBObject}
 //import org.springframework.core.convert.converter.Converter
 //import org.springframework.stereotype.Component

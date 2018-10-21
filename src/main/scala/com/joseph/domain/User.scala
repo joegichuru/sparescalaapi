@@ -1,4 +1,4 @@
-package com.joseph.spareapi.domain
+package com.joseph.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.data.annotation.Id

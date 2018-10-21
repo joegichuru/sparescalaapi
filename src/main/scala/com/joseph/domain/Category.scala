@@ -1,4 +1,4 @@
-package com.joseph.spareapi.domain
+package com.joseph.domain
 
 class Category {
   var id:Long=0

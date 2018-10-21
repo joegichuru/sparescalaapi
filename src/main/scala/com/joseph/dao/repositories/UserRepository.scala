@@ -1,6 +1,6 @@
-package com.joseph.spareapi.dao.repositories
+package com.joseph.dao.repositories
 
-import com.joseph.spareapi.domain.User
+import com.joseph.domain.User
 import org.springframework.data.mongodb.repository.MongoRepository
 
 trait UserRepository extends MongoRepository[User,String]{

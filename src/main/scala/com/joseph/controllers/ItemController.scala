@@ -1,12 +1,13 @@
-package com.joseph.spareapi.controllers
+package com.joseph.controllers
 
 import java.lang._
 import java.security.Principal
 import java.util
 import java.util.Date
 
-import com.joseph.spareapi.dao.services.{ItemService, UserService}
-import com.joseph.spareapi.domain.{Comment, Item, _}
+import com.joseph.dao.services.{ItemService, UserService}
+import com.joseph.domain.{Comment, Item, _}
+import domain._
 import javax.websocket.server.PathParam
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page

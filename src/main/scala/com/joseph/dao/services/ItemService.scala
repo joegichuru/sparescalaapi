@@ -1,11 +1,11 @@
-package com.joseph.spareapi.dao.services
+package com.joseph.dao.services
 
 import java.util
 
-import com.joseph.spareapi.dao.repositories.{CommentRepository, ItemRepository, LikeRepository}
-import com.joseph.spareapi.domain.{Comment, Item, Like}
 import com.mongodb.BasicDBObject
 import com.mongodb.client.gridfs.model.GridFSFile
+import com.joseph.dao.repositories.{CommentRepository, ItemRepository, LikeRepository}
+import com.joseph.domain.{Comment, Item, Like}
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.{Page, PageRequest}
 import org.springframework.data.geo.{Distance, Metrics, Point}

@@ -1,4 +1,4 @@
-package com.joseph.spareapi.security
+package com.joseph.security
 
 import java.util
 
@@ -6,8 +6,8 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm.HMAC512
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.google.gson.{ExclusionStrategy, FieldAttributes, Gson, GsonBuilder}
-import com.joseph.spareapi.dao.services.UserService
-import com.joseph.spareapi.domain.{Status, User}
+import com.joseph.dao.services.UserService
+import com.joseph.domain.{Status, User}
 import javax.servlet.FilterChain
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.springframework.http.HttpHeaders

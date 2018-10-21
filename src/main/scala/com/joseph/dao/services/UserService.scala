@@ -1,7 +1,7 @@
-package com.joseph.spareapi.dao.services
+package com.joseph.dao.services
 
-import com.joseph.spareapi.dao.repositories.UserRepository
-import com.joseph.spareapi.domain.User
+import com.joseph.dao.repositories.UserRepository
+import com.joseph.domain.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 

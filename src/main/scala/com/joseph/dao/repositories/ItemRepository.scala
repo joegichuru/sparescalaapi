@@ -1,6 +1,6 @@
-package com.joseph.spareapi.dao.repositories
+package com.joseph.dao.repositories
 
-import com.joseph.spareapi.domain.Item
+import com.joseph.domain.Item
 import org.springframework.data.domain.{Page, Pageable}
 import org.springframework.data.geo.{Distance, Point}
 import org.springframework.data.repository.PagingAndSortingRepository

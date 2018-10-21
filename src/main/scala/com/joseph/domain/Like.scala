@@ -1,4 +1,4 @@
-package com.joseph.spareapi.domain
+package com.joseph.domain
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.Indexed

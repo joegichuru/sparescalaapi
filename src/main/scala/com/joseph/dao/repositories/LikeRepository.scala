@@ -1,6 +1,6 @@
-package com.joseph.spareapi.dao.repositories
+package com.joseph.dao.repositories
 
-import com.joseph.spareapi.domain.Like
+import com.joseph.domain.Like
 import org.springframework.data.mongodb.repository.MongoRepository
 
 trait LikeRepository extends MongoRepository[Like,String]{
