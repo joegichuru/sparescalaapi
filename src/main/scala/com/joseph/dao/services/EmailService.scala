@@ -29,7 +29,7 @@ class EmailService @Autowired()(jms: JavaMailSender) {
 //        link = serverAddress
 //    }
 
-    serverAddress = serverAddress + "/activate/" + user.getId + "/" + user.getEmail
+    serverAddress = serverAddress + "/auth/activate/" + user.getId + "/" + user.getEmail
     text = text + serverAddress
     simpleMailMessage.setText(text)
     jms.send(simpleMailMessage)
