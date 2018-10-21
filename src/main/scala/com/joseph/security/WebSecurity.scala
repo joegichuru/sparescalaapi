@@ -22,7 +22,7 @@ class WebSecurity @Autowired ()(userDetailsServiceImp:UserDetailServiceImpl,
       .antMatchers(HttpMethod.POST,Constants.SIGN_UP_URL)
       .permitAll()
        .antMatchers(HttpMethod.GET,Constants.FILE_URLS).permitAll()
-      .antMatchers(HttpMethod.POST,Constants.ACTIVATE).permitAll()
+      .antMatchers(HttpMethod.GET,Constants.ACTIVATE).permitAll()
       .anyRequest().authenticated()
       .and()
       .addFilter(new JWTAuthenticationFilter(authenticationManager(),userService))
