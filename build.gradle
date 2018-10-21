@@ -23,7 +23,7 @@ group = 'com.joseph'
 version = '0.0.1'
 sourceCompatibility = 1.8
 
-mainClassName = 'com.joseph.spareapi.Application'
+mainClassName = 'com.joseph.Application'
 
 repositories {
     mavenCentral()
