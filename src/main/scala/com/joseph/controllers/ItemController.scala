@@ -172,16 +172,19 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
     * @return
     */
   @PostMapping(value = Array("/{itemId}/comment"))
-  def comment(@PathVariable("itemId") itemId: String, @PathParam("comment") userComment: String, principal: Principal): Status = {
+  @ResponseBody
+  def comment(@PathVariable("itemId") itemId: String, @PathParam("comment") userComment: String, principal: Principal): Any = {
     //check if item exists first before adding comment
-    if(!itemService.exists(itemId)) return  new Status(status = "error",message = "Item does not exist")
+    if(!itemService.exists(itemId)) return  new Status(status = "error",message = "Item no longer exist")
     val comment:Comment=new Comment
     comment.setBody(userComment)
     comment.setCreatedOn(new Date().getTime)
     comment.setItemId(itemId)
     comment.setUser(userService.findByEmail(principal.getName))
     itemService.saveComment(comment)
+    //todo modify this to return all comments on that item
     new Status(status = "success","comment added")
+    itemService.findComments(itemId)
   }
 
   /**
@@ -252,7 +255,7 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
            principal: Principal
          ): Any = {
     if (images.isEmpty) {
-      return new Status(status = "error", message = "Atleast one image required")
+      return new Status(status = "error", message = "At least one image required")
     }
 
     val item: Item = new Item

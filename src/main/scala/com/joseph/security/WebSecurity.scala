@@ -2,6 +2,7 @@ package com.joseph.security
 
 import com.joseph.dao.services.UserService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.cors.{CorsConfigurationSource, UrlBasedCorsConfigurationSource}
 
 @EnableWebSecurity
+@Configuration
 class WebSecurity @Autowired ()(userDetailsServiceImp:UserDetailServiceImpl,
                                  passwordEncoder:BCryptPasswordEncoder,userService:UserService)
   extends WebSecurityConfigurerAdapter{
@@ -19,11 +21,11 @@ class WebSecurity @Autowired ()(userDetailsServiceImp:UserDetailServiceImpl,
       .csrf()
       .disable()
       .authorizeRequests()
-      .antMatchers(HttpMethod.POST,Constants.SIGN_UP_URL)
+      .antMatchers(HttpMethod.POST,Constants.SIGN_UP_URL,Constants.PASSWORD_RESET)
       .permitAll()
-       .antMatchers(HttpMethod.GET,Constants.FILE_URLS).permitAll()
-      .antMatchers(HttpMethod.GET,Constants.ACTIVATE).permitAll()
-      .anyRequest().authenticated()
+      .antMatchers(HttpMethod.GET,Constants.FILE_URLS,Constants.SWAGGER,Constants.SWAGGER2,Constants.API_DOCS,Constants.SWAGGER_UI).permitAll()
+      .anyRequest()
+      .authenticated()
       .and()
       .addFilter(new JWTAuthenticationFilter(authenticationManager(),userService))
       .addFilter(new JWTAuthorizationFilter(authenticationManager(),userService))

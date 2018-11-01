@@ -10,11 +10,27 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation._
 import org.springframework.web.multipart.MultipartFile
 
+import scala.util.Random
+
+/**
+  * All services related to account activity
+  * @param userService
+  * @param bCryptPasswordEncoder
+  * @param emailService
+  */
+
 @RestController
 @RequestMapping(Array("/auth"))
 class UserController @Autowired()(userService: UserService, bCryptPasswordEncoder: BCryptPasswordEncoder
                                   , emailService: EmailService) {
 
+  /**
+    * Register user
+    * @param name
+    * @param email
+    * @param password
+    * @return
+    */
 
   @PostMapping(Array("/signup"))
   def signUp(@RequestParam("name") name: String,
@@ -27,14 +43,23 @@ class UserController @Autowired()(userService: UserService, bCryptPasswordEncode
     user.setCreatedOn(new Date().getTime)
     user.setRole(Roles.REGULAR)
     user.setPassword(bCryptPasswordEncoder.encode(password))
+    user.setActive(true)
     userService.register(user)
-    val user1=userService.findByEmail(user.getEmail);
-    //sent email to user with userId/email
-    emailService.sendMail(user1)
+    // val user1=userService.findByEmail(user.getEmail)
 
-    new Status("success", "Registration successful.Activation link sent through email.")
+    //sent email to user with userId/email
+    // emailService.sendMail(user1)
+
+    new Status("success", "Registration successful")
   }
 
+  /**
+    * activates account
+    * thism link is sent via email
+    * @param id
+    * @param email
+    * @return
+    */
   @GetMapping(Array("/activate/{userId}/{email}"))
   def activateAccount(@PathVariable("userId") id: String, @PathVariable("email") email: String): String = {
     val user = userService.findUser(id)
@@ -48,32 +73,76 @@ class UserController @Autowired()(userService: UserService, bCryptPasswordEncode
     "Account activated.Please login"
   }
 
-  //reset password
-  def passwordReset(): Status = {
-    null
-  }
 
-  //email user with reset link
-  @PostMapping(Array("/password/resetlink"))
+  /**
+    * email user with temporary password 6 characters long
+    * @param email
+    * @return
+    */
+  @PostMapping(Array("/password/reset"))
   @ResponseBody
   def requestPasswordResetLink(@RequestParam("email") email: String): Status = {
     if (!userService.existByEmail(email)) return new Status("error", "E-mail not found")
     val user = userService.findByEmail(email)
     //send email to user
+    val random = new Random()
+    val password = random.nextInt(6)
+    try {
+      emailService.sendMail(user, password)
+    } catch {
+      case _: Throwable => return new Status("error", "Password could not be reset")
+    }
     new Status("success", "Password reset link send via email")
   }
 
-  //change password this should be via a web interface not the app
-  @PostMapping(Array("/password/userId"))
-  def changePassword(@PathVariable("userId") userId: String): Status = {
-    null
+  /**
+    * Change user password
+    * @param oldPassword
+    * @param newPassword
+    * @param principal
+    * @return
+    */
+  @PostMapping(Array("/password/update"))
+  @RequestBody
+  def changePassword(@RequestParam("oldPassword") oldPassword: String,
+                     @RequestParam("newPassword") newPassword: String, principal: Principal): Status = {
+    val user = userService.findByEmail(principal.getName)
+    val encodedPassword = bCryptPasswordEncoder.encode(oldPassword)
+    if (bCryptPasswordEncoder.matches(oldPassword,user.getPassword )) {
+      val encodedNew = bCryptPasswordEncoder.encode(newPassword)
+      user.setPassword(encodedNew)
+      userService.save(user)
+      new Status("success", "Password updated.")
+    } else {
+      new Status("error", "Old password validation failed.")
+    }
   }
 
-  //update account
-  @PostMapping(Array("update"))
+  /**
+    * Update user account
+    * the image is optional
+    * @param name
+    * @param email
+    * @param avatar
+    * @param principal
+    * @return
+    */
+  @PostMapping(Array("/update"))
+  @ResponseBody
   def updateAccount(@RequestParam("name") name: String,
-                    @RequestParam("email") email: String, avatar: MultipartFile, principal: Principal): Status = {
-    null
-
+                    @RequestParam("email") email: String,
+                    @RequestParam(name="avatar", required = false) avatar: Option[MultipartFile],
+                    principal: Principal): Status = {
+    val user = userService.findByEmail(principal.getName)
+    user.setEmail(email)
+    user.setName(name)
+    //save profile picture
+    avatar match {
+      case image: Some[MultipartFile] =>
+        userService.saveImage(user, image.get)
+      case _ =>
+        userService.save(user)
+    }
+    new Status("success", "Account updated")
   }
 }

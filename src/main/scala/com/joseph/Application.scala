@@ -10,8 +10,13 @@ import org.springframework.http.MediaType
 import org.springframework.http.converter.ByteArrayHttpMessageConverter
 import org.springframework.mail.javamail.{JavaMailSender, JavaMailSenderImpl}
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import springfox.documentation.builders.{PathSelectors, RequestHandlerSelectors}
+import springfox.documentation.spi.DocumentationType
+import springfox.documentation.spring.web.plugins.Docket
+import springfox.documentation.swagger2.annotations.EnableSwagger2
 
 @SpringBootApplication
+@EnableSwagger2
 class Application {
   @Bean
   def bCryptPasswordEncoder: BCryptPasswordEncoder = new BCryptPasswordEncoder
@@ -34,7 +39,7 @@ class Application {
     props.put("mail.transport.protocol", "smtp")
     props.put("mail.smtp.auth", "true")
     props.put("mail.smtp.starttls.enable", "true")
-    props.put("mail.debug", "false")
+    props.put("mail.debug", "true")
     mailSender
   }
 
@@ -45,9 +50,18 @@ class Application {
     mediaTypes.add(MediaType.IMAGE_GIF)
     mediaTypes
   }
+
+  @Bean
+  def docket(): Docket = {
+    new Docket(DocumentationType.SWAGGER_2)
+      .select()
+      .apis(RequestHandlerSelectors.any())
+      .paths(PathSelectors.any())
+      .build()
+  }
 }
 
-object Application{
+object Application {
   def main(args: Array[String]): Unit = {
     SpringApplication.run(classOf[Application])
   }

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.{GetMapping, PathVariable, RequestMapping, ResponseBody}
 
 @Controller
-@RequestMapping(Array("/items/p"))
+@RequestMapping(Array("/resource/p"))
 class ResourceController @Autowired()(mongoClient: MongoClient, gridFsTemplate: GridFsTemplate)() {
   @Value("${spring.data.mongodb.database}")
   private var dbName:String = _

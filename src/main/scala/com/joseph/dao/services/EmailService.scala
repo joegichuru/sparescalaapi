@@ -34,4 +34,17 @@ class EmailService @Autowired()(jms: JavaMailSender) {
     simpleMailMessage.setText(text)
     jms.send(simpleMailMessage)
   }
+  @throws[Exception]
+  def sendMail(user: User,password:Int): Unit = {
+
+    val simpleMailMessage = new SimpleMailMessage
+    simpleMailMessage.setTo(user.getEmail)
+    simpleMailMessage.setSubject("Spare Password Reset")
+
+
+    var text = "Hello " + user.getName + ",\n" + "Please use "+password+" as your temporary password.Ignore if you did not request.\n"
+
+    simpleMailMessage.setText(text)
+    jms.send(simpleMailMessage)
+  }
 }
