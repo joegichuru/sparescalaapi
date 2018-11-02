@@ -25,7 +25,7 @@ class User {
   @BeanProperty
   var accessToken:String=_
   @BeanProperty @JsonIgnore
-  var active:Boolean=false
+  var active:Boolean=true
   @BeanProperty @JsonIgnore
   var suspended:Boolean=false
 
