@@ -32,7 +32,9 @@ case class Item() {
   @BeanProperty
   var lat, lon: Double = _
   @BeanProperty
-  var amenities: Set[String] = _
+  var city:String="Nairobi"
+  @BeanProperty
+  var amenities: java.util.Set[String] = _
   @BeanProperty
   var email, phone, website: String = _
   @BeanProperty

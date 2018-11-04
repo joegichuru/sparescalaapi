@@ -4,6 +4,8 @@ import java.lang._
 import java.security.Principal
 import java.util
 import java.util.Date
+import  scala.collection.JavaConversions._
+
 
 import com.joseph.dao.services.{ItemService, UserService}
 import com.joseph.domain.{Comment, Item, _}
@@ -61,7 +63,7 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
   def findOne(@PathVariable(value = "itemId") itemId: String): Any = {
     itemService.findOne(itemId) match {
       case item: Item => item
-      case _ =>new Status("error","Item does not exist")
+      case _ => new Status("error", "Item does not exist")
     }
   }
 
@@ -93,7 +95,7 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
     * @return
     */
   @GetMapping(value = Array("/search"), params = Array("q", "filter"))
-  def search(@RequestParam("q") query: String, @RequestParam("filter") filter: String):Page[Item] = {
+  def search(@RequestParam("q") query: String, @RequestParam("filter") filter: String): Page[Item] = {
     null
   }
 
@@ -108,7 +110,7 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
     */
   @GetMapping(value = Array("/search"), params = Array("q", "filter", "priceHigh", "priceLow"))
   def search(@RequestParam("q") query: String, @RequestParam("filter") filter: String
-             , @RequestParam("priceHigh") priceHigh: Long, @RequestParam("priceLow") priceLow: Long): Page[Item]= {
+             , @RequestParam("priceHigh") priceHigh: Long, @RequestParam("priceLow") priceLow: Long): Page[Item] = {
     null
   }
 
@@ -135,8 +137,8 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
     * @return
     */
   @GetMapping(value = Array("/nearby"))
-  def findNearby(@RequestParam("lat") lat: Double, @RequestParam("lng") lng: Double):Page[Item] = {
-    itemService.findNearPaged(lat,lng)
+  def findNearby(@RequestParam("lat") lat: Double, @RequestParam("lng") lng: Double): Page[Item] = {
+    itemService.findNearPaged(lat, lng)
   }
 
   /**
@@ -147,17 +149,20 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
     * @param page
     * @return
     */
-  @GetMapping(value = Array("/{itemId}/comments/{page}")) @ResponseBody
-  def findCommentsPaged(@PathVariable("itemId") itemId: String,@PathVariable("page") page:Int=0): Page[Comment] = {
-    itemService.findComments(itemId,page)
+  @GetMapping(value = Array("/{itemId}/comments/{page}"))
+  @ResponseBody
+  def findCommentsPaged(@PathVariable("itemId") itemId: String, @PathVariable("page") page: Int = 0): Page[Comment] = {
+    itemService.findComments(itemId, page)
   }
 
   /**
     * finds all comments unpaged
+    *
     * @param itemId
     * @return
     */
-  @GetMapping(value = Array("/{itemId}/comments")) @ResponseBody
+  @GetMapping(value = Array("/{itemId}/comments"))
+  @ResponseBody
   def findComments(@PathVariable("itemId") itemId: String): Page[Comment] = {
     itemService.findComments(itemId)
   }
@@ -175,15 +180,15 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
   @ResponseBody
   def comment(@PathVariable("itemId") itemId: String, @PathParam("comment") userComment: String, principal: Principal): Any = {
     //check if item exists first before adding comment
-    if(!itemService.exists(itemId)) return  new Status(status = "error",message = "Item no longer exist")
-    val comment:Comment=new Comment
+    if (!itemService.exists(itemId)) return new Status(status = "error", message = "Item no longer exist")
+    val comment: Comment = new Comment
     comment.setBody(userComment)
     comment.setCreatedOn(new Date().getTime)
     comment.setItemId(itemId)
     comment.setUser(userService.findByEmail(principal.getName))
     itemService.saveComment(comment)
     //todo modify this to return all comments on that item
-    new Status(status = "success","comment added")
+    new Status(status = "success", "comment added")
     itemService.findComments(itemId)
   }
 
@@ -199,20 +204,20 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
   @PostMapping(value = Array("/{itemId}/like"))
   def like(@PathVariable("itemId") itemId: String, principal: Principal): Status = {
     //check if the item exists first
-    if(!itemService.exists(itemId)) return new Status(status = "error",message = "item does not exist")
-    val user=userService.findByEmail(principal.getName)
+    if (!itemService.exists(itemId)) return new Status(status = "error", message = "item does not exist")
+    val user = userService.findByEmail(principal.getName)
 
-    if(itemService.isLiked(user.getId,itemId)){
-      itemService.unlike(user.getId,itemId)
-      new Status(status = "success",message = "Item unliked.")
-    }else{
+    if (itemService.isLiked(user.getId, itemId)) {
+      itemService.unlike(user.getId, itemId)
+      new Status(status = "success", message = "Item unliked.")
+    } else {
       //like
-      val like:Like=new Like
+      val like: Like = new Like
       like.setCreatedOn(new Date().getTime)
       like.setItemId(itemId)
       like.setUser(user)
       itemService.like(like)
-      new Status(status = "success",message = "Item liked.")
+      new Status(status = "success", message = "Item liked.")
     }
 
   }
@@ -232,6 +237,7 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
            category: Long = 0l,
            @RequestParam(name = "description")
            description: String,
+           @RequestParam(name = "city") city: String,
            @RequestParam(name = "lat")
            lat: java.lang.Double = new java.lang.Double(0),
            @RequestParam(name = "lng")
@@ -277,8 +283,9 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
     item.setLon(lng)
     if (amenities != null && !amenities.isEmpty) {
       val am = amenities.split(",").toSet
-      item.setAmenities(am)
+      item.setAmenities(setAsJavaSet(am))
     }
+
 
 
     item.setEmail(email)
@@ -291,7 +298,7 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
     if (user != null) {
       item.setUser(user)
     }
-    item.setPoint(new Point(lat,lng))
+    item.setPoint(new Point(lat, lng))
     item.setPostedOn(new Date().getTime)
     itemService.saveWithImages(images, item)
 
@@ -301,21 +308,24 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
     * deletes a given item
     * deletes its comments too
     * or should you just update the published flag? so in essance the item is never deleted
+    *
     * @param itemId
     * @return
     */
-  @PostMapping(Array("/{itemId}/delete")) @ResponseBody
-  def remove(@PathVariable("itemId") itemId:String,principal: Principal): Status = {
-    if(!itemService.exists(itemId)) return new Status("error","Item not found")
-    val item=itemService.findOne(itemId)
-    if(item.getUser.getId!=userService.findByEmail(principal.getName).getId) {
-      return new Status("error","You cannot delete an item you did not create")
+  @PostMapping(Array("/{itemId}/delete"))
+  @ResponseBody
+  def remove(@PathVariable("itemId") itemId: String, principal: Principal): Status = {
+    if (!itemService.exists(itemId)) return new Status("error", "Item not found")
+    val item = itemService.findOne(itemId)
+    if (item.getUser.getId != userService.findByEmail(principal.getName).getId) {
+      return new Status("error", "You cannot delete an item you did not create")
     }
     itemService.removeItem(item)
-    new Status("success","Item deleted successfully")
+    new Status("success", "Item deleted successfully")
   }
 
-  @PostMapping(Array("/update")) @ResponseBody
+  @PostMapping(Array("/update"))
+  @ResponseBody
   def update(@RequestBody item: Item, principal: Principal): Status = {
     val user = userService.findByEmail(principal.getName)
     if (item.getId == null) return new Status(status = "error", message = "Item id not found")
@@ -328,7 +338,7 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
     item.setPostedOn(new Date().getTime)
     item.setIsLiked(localItem.isLiked)
     item.setIsPublished(localItem.isPublished)
-    item.setPoint(new Point(item.getLat,item.getLon))
+    item.setPoint(new Point(item.getLat, item.getLon))
     itemService.save(item)
     new Status(status = "success", message = "Item updated")
 
@@ -336,7 +346,8 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
 
   /**
     * updates images of a given item
-    *save the image then update the item images
+    * save the image then update the item images
+    *
     * @param itemId
     * @param images
     * @return
@@ -349,6 +360,7 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
   /**
     * deletes an image of a given item
     * delete image then update the item images
+    *
     * @param itemId
     * @param imageId
     * @return
@@ -359,8 +371,8 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
   }
 
   @GetMapping(Array("/categories"))
-  def findCategories(): util.ArrayList[Category] ={
-    val categorieslist=new util.ArrayList[Category]()
+  def findCategories(): util.ArrayList[Category] = {
+    val categorieslist = new util.ArrayList[Category]()
     null
 
   }
