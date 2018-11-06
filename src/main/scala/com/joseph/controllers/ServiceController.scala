@@ -16,8 +16,12 @@ class ServiceController @Autowired()(userService: UserService) {
 
 
   @PostMapping(Array("/fcm-token"))
-  def registerFcmToken(@RequestParam("fcmToken") fcmToken: String,principal: Principal):Status={
-    //tpdp get
-    return  new Status("success",message = "Token updated")
+  def registerFcmToken(@RequestParam("fcmtoken") fcmToken: String,principal: Principal):Status={
+    //save/update user token
+    val user=userService.findByEmail(principal.getName)
+
+    user.setFcmToken(fcmToken)
+    userService.save(user)
+    new Status("success",message = "token updated")
   }
 }

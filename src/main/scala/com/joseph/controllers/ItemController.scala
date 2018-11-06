@@ -4,10 +4,9 @@ import java.lang._
 import java.security.Principal
 import java.util
 import java.util.Date
-import  scala.collection.JavaConversions._
 
-
-import com.joseph.dao.services.{ItemService, UserService}
+import scala.collection.JavaConversions._
+import com.joseph.dao.services.{ItemService, ServiceUtils, UserService}
 import com.joseph.domain.{Comment, Item, _}
 import domain._
 import javax.websocket.server.PathParam
@@ -20,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile
 
 @RestController()
 @RequestMapping(Array("/items"))
-class ItemController @Autowired()(itemService: ItemService, userService: UserService) {
+class ItemController @Autowired()(itemService: ItemService, userService: UserService,serviceUtils: ServiceUtils) {
 
   /**
     * finds all items with no parameters
@@ -230,6 +229,10 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
       like.setItemId(itemId)
       like.setUser(user)
       itemService.like(like)
+      val item=itemService.findOne(itemId)
+
+      //send notification to user
+      serviceUtils.sendLikeNotification(item.getUser,user)
       new Status(status = "success", message = "Item liked.")
     }
 
