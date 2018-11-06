@@ -5,7 +5,7 @@ import java.util
 import com.mongodb.BasicDBObject
 import com.mongodb.client.gridfs.model.GridFSFile
 import com.joseph.dao.repositories.{CommentRepository, ItemRepository, LikeRepository}
-import com.joseph.domain.{Comment, Item, Like}
+import com.joseph.domain.{Comment, Item, Like, User}
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.{Page, PageRequest}
 import org.springframework.data.geo.{Distance, Metrics, Point}
@@ -50,6 +50,9 @@ class ItemService @Autowired()(itemRepository: ItemRepository, commentRepository
 
   def exists(id: String): Boolean = {
     itemRepository.existsById(id)
+  }
+  def findByUser(user:User):java.util.List[Item]={
+    itemRepository.findAllByUser(user)
   }
 
   //add user meta to list items
@@ -111,8 +114,9 @@ class ItemService @Autowired()(itemRepository: ItemRepository, commentRepository
     }
   }
 
-  def findNearPaged(lat: Double, lng: Double, d: Double = 50, p: Int = 0): Page[Item] = {
-    val pageRequest: PageRequest = PageRequest.of(p, 20)
+  //radius of around 100 km seems ok and around 30 items too
+  def findNearPaged(lat: Double, lng: Double, d: Double = 100, p: Int = 0): Page[Item] = {
+    val pageRequest: PageRequest = PageRequest.of(p, 30)
     val distance: Distance = new Distance(d, Metrics.KILOMETERS)
     val point = new Point(lat, lng)
     itemRepository.findByPointNearOrderByPoint(point = point, distance = distance, pageRequest)

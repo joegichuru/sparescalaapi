@@ -1,15 +1,18 @@
 package com.joseph.dao.repositories
 
-import com.joseph.domain.Item
+import com.joseph.domain.{Item, User}
 import org.springframework.data.domain.{Page, Pageable}
 import org.springframework.data.geo.{Distance, Point}
 import org.springframework.data.repository.PagingAndSortingRepository
 
-trait ItemRepository extends PagingAndSortingRepository[Item,String]{
+trait ItemRepository extends PagingAndSortingRepository[Item, String] {
   def findAllByOrderByPostedOnDesc(pageable: Pageable): Page[Item]
 
-  override def findAll(): java.util.List[Item] ;
+  override def findAll(): java.util.List[Item]
 
-  def findByPointNearOrderByPoint(point:Point,distance: Distance,pageable: Pageable):Page[Item]
-  def findByPointNear(point:Point,distance: Distance):java.util.List[Item]
+  def findByPointNearOrderByPoint(point: Point, distance: Distance, pageable: Pageable): Page[Item]
+
+  def findByPointNear(point: Point, distance: Distance): java.util.List[Item]
+
+  def findAllByUser(user: User):java.util.List[Item]
 }

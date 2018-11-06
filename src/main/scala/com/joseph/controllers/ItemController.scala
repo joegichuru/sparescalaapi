@@ -68,6 +68,19 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
   }
 
   /**
+    * finds items posted by specific user
+    * @param userId
+    * @return
+    */
+  @GetMapping(Array("/u/{userId}"))
+  @ResponseBody
+  def findByUser(@PathVariable(value = "userId") userId:String):java.util.List[Item]={
+    val user=userService.findUser(userId)
+    if(user==null) return new java.util.ArrayList[Item]
+    itemService.findByUser(user)
+  }
+
+  /**
     * search items with given query parameter
     * returns a page of relevant items with default page size being 20
     * attach some form of analytics to track search keys
@@ -284,6 +297,7 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
     if (amenities != null && !amenities.isEmpty) {
       val am = amenities.split(",").toSet
       item.setAmenities(setAsJavaSet(am))
+
     }
 
 
