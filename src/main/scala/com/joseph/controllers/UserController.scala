@@ -3,7 +3,7 @@ package com.joseph.controllers
 import java.security.Principal
 import java.util.Date
 
-import com.joseph.dao.services.{EmailService, UserService}
+import com.joseph.dao.services.{EmailService, ItemService, UserService}
 import com.joseph.domain.{Roles, Status, User}
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -22,7 +22,7 @@ import scala.util.Random
 @RestController
 @RequestMapping(Array("/auth"))
 class UserController @Autowired()(userService: UserService, bCryptPasswordEncoder: BCryptPasswordEncoder
-                                  , emailService: EmailService) {
+                                  , emailService: EmailService,itemService: ItemService) {
 
   /**
     * Register user
@@ -144,6 +144,10 @@ class UserController @Autowired()(userService: UserService, bCryptPasswordEncode
         userService.save(user)
     }
 
+    //update user items
+    itemService.updateUserItems(user)
+
+
     user
 
   }
@@ -157,6 +161,8 @@ class UserController @Autowired()(userService: UserService, bCryptPasswordEncode
     user.setName(name)
     userService.save(user)
 
+    //update user items
+    itemService.updateUserItems(user)
     user
 
   }

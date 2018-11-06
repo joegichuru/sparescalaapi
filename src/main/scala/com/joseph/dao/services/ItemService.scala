@@ -51,7 +51,8 @@ class ItemService @Autowired()(itemRepository: ItemRepository, commentRepository
   def exists(id: String): Boolean = {
     itemRepository.existsById(id)
   }
-  def findByUser(user:User):java.util.List[Item]={
+
+  def findByUser(user: User): java.util.List[Item] = {
     itemRepository.findAllByUser(user)
   }
 
@@ -141,6 +142,17 @@ class ItemService @Autowired()(itemRepository: ItemRepository, commentRepository
     if (commentRepository.existsById(commentId)) {
       commentRepository.deleteById(commentId)
     }
+  }
+
+  def updateUserItems(user: User): Unit = {
+    itemRepository.saveAll(itemRepository.findAllByUserId(user.getId).asScala.map(item => {
+      item.setUser(user)
+      item
+    }).asJava)
+  }
+
+  def deleteUserItems(user: User): Unit = {
+    itemRepository.deleteAll(itemRepository.findAllByUser(user))
   }
 
 

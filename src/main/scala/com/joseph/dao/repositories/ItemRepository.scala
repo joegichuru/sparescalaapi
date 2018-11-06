@@ -14,5 +14,7 @@ trait ItemRepository extends PagingAndSortingRepository[Item, String] {
 
   def findByPointNear(point: Point, distance: Distance): java.util.List[Item]
 
-  def findAllByUser(user: User):java.util.List[Item]
+  def findAllByUser(user: User): java.util.List[Item]
+
+  def findAllByUserId(id: String): java.util.List[Item]
 }
