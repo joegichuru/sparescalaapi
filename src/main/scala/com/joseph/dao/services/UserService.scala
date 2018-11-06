@@ -69,7 +69,7 @@ class UserService @Autowired()(userRepository: UserRepository,gridFsOperations: 
     val is = image.getInputStream
     val id = gridFsOperations.store(is, image.getOriginalFilename, image.getContentType, metadata)
     user.setImageUrl(id.toString)
-    //todo add option to delete image
+
     save(user)
   }
 }

@@ -131,22 +131,16 @@ class UserController @Autowired()(userService: UserService, bCryptPasswordEncode
   @ResponseBody
   def updateAccount(@RequestParam("name") name: String,
                     @RequestParam("email") email: String,
-                    @RequestParam(name="avatar", required = false) avatar: Option[MultipartFile],
+                    @RequestParam(name="avatar", required = false) avatar: MultipartFile,
                     principal: Principal): User = {
     val user = userService.findByEmail(principal.getName)
     user.setEmail(email)
     user.setName(name)
     //save profile picture
-    avatar match {
-      case image: Some[MultipartFile] =>
-        userService.saveImage(user, image.get)
-      case _ =>
-        userService.save(user)
-    }
+   userService.saveImage(user,avatar)
 
     //update user items
     itemService.updateUserItems(user)
-
 
     user
 
