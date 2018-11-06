@@ -250,7 +250,7 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
            category: Long = 0l,
            @RequestParam(name = "description")
            description: String,
-           @RequestParam(name = "city") city: String,
+           @RequestParam(name = "city",required = true) city: String,
            @RequestParam(name = "lat")
            lat: java.lang.Double = new java.lang.Double(0),
            @RequestParam(name = "lng")
@@ -307,6 +307,7 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
     item.setWebsite(website)
     item.setBathrooms(bathrooms)
     item.setBedrooms(bedrooms)
+    item.setCity(city)
     item.setArea(area)
     val user = userService.findByEmail(principal.getName)
     if (user != null) {

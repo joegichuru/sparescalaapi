@@ -127,12 +127,12 @@ class UserController @Autowired()(userService: UserService, bCryptPasswordEncode
     * @param principal
     * @return
     */
-  @PostMapping(Array("/update"))
+  @PostMapping(Array("/update/all"))
   @ResponseBody
   def updateAccount(@RequestParam("name") name: String,
                     @RequestParam("email") email: String,
                     @RequestParam(name="avatar", required = false) avatar: Option[MultipartFile],
-                    principal: Principal): Status = {
+                    principal: Principal): User = {
     val user = userService.findByEmail(principal.getName)
     user.setEmail(email)
     user.setName(name)
@@ -143,6 +143,21 @@ class UserController @Autowired()(userService: UserService, bCryptPasswordEncode
       case _ =>
         userService.save(user)
     }
-    new Status("success", "Account updated")
+
+    user
+
+  }
+  @PostMapping(Array("/update"))
+  @ResponseBody
+  def updateAccount(@RequestParam("name") name: String,
+                    @RequestParam("email") email: String,
+                    principal: Principal): User = {
+    val user = userService.findByEmail(principal.getName)
+    user.setEmail(email)
+    user.setName(name)
+    userService.save(user)
+
+    user
+
   }
 }
