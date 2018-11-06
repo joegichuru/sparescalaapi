@@ -35,7 +35,7 @@ class ServiceUtils {
     val httpHeaders=new HttpHeaders()
     httpHeaders.add(HttpHeaders.AUTHORIZATION,"Bearer "+FIREBASE_SERVER_KEY)
     httpHeaders.add(HttpHeaders.CONTENT_TYPE,"application/json")
-    val httpEntity=new HttpEntity[String,String](data,httpHeaders)
+    val httpEntity=new HttpEntity(data,httpHeaders)
     val response:ResponseEntity[String]=restTemplate.postForEntity(FIREBASE_API_URL,httpEntity,classOf[String])
     System.out.println(response.getBody.toString)
 
