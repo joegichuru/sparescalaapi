@@ -29,10 +29,9 @@ class WebSecurity @Autowired ()(userDetailsServiceImp:UserDetailServiceImpl,
       .and()
       .addFilter(new JWTAuthenticationFilter(authenticationManager(),userService))
       .addFilter(new JWTAuthorizationFilter(authenticationManager(),userService))
+     // .antMatcher("/dashboard/**").addFilter(new DashboardAccessFilter(authenticationManager(),userService))
       .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-    http.antMatcher("/dashboard/**")
-      .addFilter(new DashboardAccessFilter(authenticationManager(),userService))
   }
 
 
