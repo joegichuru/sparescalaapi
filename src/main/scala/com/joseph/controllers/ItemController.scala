@@ -228,7 +228,7 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
       val item=itemService.findOne(itemId)
 
       //send notification to user
-      serviceUtils.sendLikeNotification(item.getUser,user)
+     // serviceUtils.sendLikeNotification(item.getUser,user)
       new Status(status = "success", message = "Item liked.")
     }
 
