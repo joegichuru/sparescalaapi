@@ -28,8 +28,6 @@ class ItemService @Autowired()(itemRepository: ItemRepository, commentRepository
   }
 
 
-
-
   //default page sizes is 20
   def findByPage(pageno: Int = 0): Page[Item] = {
     val pageRequest: PageRequest = PageRequest.of(pageno, 20)
@@ -40,6 +38,21 @@ class ItemService @Autowired()(itemRepository: ItemRepository, commentRepository
 
   def findAll(): java.util.List[Item] = {
     itemRepository.findAll()
+  }
+
+  //number of likes on individual items
+  def likesCount(item: Item): Long = {
+    likeRepository.findAllByItemId(item.getId).size()
+  }
+
+  //transform items that are user specific
+  def findAll(user: User):java.util.List[Item]={
+    itemRepository.findAllOrderByPostedOnDesc().asScala.map(item=>{
+      item.setIsLiked(isLiked(user.getId,item.getId))
+      item.setLikes(likesCount(item))
+      item
+    }).asJava
+
   }
 
 
@@ -126,11 +139,19 @@ class ItemService @Autowired()(itemRepository: ItemRepository, commentRepository
   }
 
   //radius of around 100 km seems ok and around 30 items too
-  def findNearPaged(lat: Double, lng: Double, d: Double = 100, p: Int = 0): Page[Item] = {
+  def findNearPaged(lat: Double, lng: Double, d: Double = 100, p: Int = 0,user: User): java.util.List[Item] = {
     val pageRequest: PageRequest = PageRequest.of(p, 30)
     val distance: Distance = new Distance(d, Metrics.KILOMETERS)
     val point = new Point(lat, lng)
-    itemRepository.findByPointNearOrderByPoint(point = point, distance = distance, pageRequest)
+    val data=itemRepository.findByPointNearOrderByPoint(point = point, distance = distance, pageRequest)
+
+    val list=data.getContent
+    list.asScala.map(item=>{
+      item.setLikes(likesCount(item))
+      item.setIsLiked(isLiked(user.getId,item.getId))
+      item
+    }).asJava
+
   }
 
   def findNear(lat: Double, lng: Double, d: Double = 50): java.util.List[Item] = {

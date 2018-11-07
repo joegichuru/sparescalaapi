@@ -9,6 +9,8 @@ import org.springframework.data.repository.PagingAndSortingRepository
 trait ItemRepository extends PagingAndSortingRepository[Item, String] {
   def findAllByOrderByPostedOnDesc(pageable: Pageable): Page[Item]
 
+  def findAllOrderByPostedOnDesc():java.util.List[Item]
+
   override def findAll(): java.util.List[Item]
 
   def findByPointNearOrderByPoint(point: Point, distance: Distance, pageable: Pageable): Page[Item]

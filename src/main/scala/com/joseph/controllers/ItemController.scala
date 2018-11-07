@@ -30,8 +30,14 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
     */
   @GetMapping
   @ResponseBody
-  def findAll(principle: Principal): Page[Item] = {
-    itemService.findByPage()
+  def findAll(principle: Principal): java.util.List[Item] = {
+    if(userService.existByEmail(principle.getName)){
+      val user=userService.findByEmail(principle.getName)
+      itemService.findAll(user)
+    }else{
+      itemService.findAll()
+    }
+
   }
 
   /**
@@ -145,8 +151,9 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
     * @return
     */
   @GetMapping(value = Array("/nearby"))
-  def findNearby(@RequestParam("lat") lat: Double, @RequestParam("lng") lng: Double): Page[Item] = {
-    itemService.findNearPaged(lat, lng)
+  def findNearby(@RequestParam("lat") lat: Double, @RequestParam("lng") lng: Double,principal: Principal): java.util.List[Item] = {
+    val user=userService.findByEmail(principal.getName)
+    itemService.findNearPaged(lat, lng,user=user)
   }
 
   /**
