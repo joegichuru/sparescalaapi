@@ -3,6 +3,7 @@ package com.joseph.dao.repositories
 import com.joseph.domain.{Item, User}
 import org.springframework.data.domain.{Page, Pageable}
 import org.springframework.data.geo.{Distance, Point}
+import org.springframework.data.mongodb.repository.Query
 import org.springframework.data.repository.PagingAndSortingRepository
 
 trait ItemRepository extends PagingAndSortingRepository[Item, String] {
@@ -17,4 +18,7 @@ trait ItemRepository extends PagingAndSortingRepository[Item, String] {
   def findAllByUser(user: User): java.util.List[Item]
 
   def findAllByUserId(id: String): java.util.List[Item]
+  @Query("{$or : [{'name': { $regex: ?0, $options:'i' }}, {'description': { $regex: ?0, $options:'i' }}]}")
+  def findAllBy(q:String):java.util.List[Item]
+
 }

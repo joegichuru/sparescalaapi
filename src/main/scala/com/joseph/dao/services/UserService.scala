@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.gridfs.GridFsTemplate
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 
-import scala.collection.JavaConverters._
 import scala.collection.mutable
 
 @Service
@@ -49,8 +48,8 @@ class UserService @Autowired()(userRepository: UserRepository,gridFsOperations: 
 
   }
 
-  def findAll(): Set[User] = {
-    userRepository.findAll().asScala.toSet
+  def findAll(): java.util.List[User] = {
+    userRepository.findAll()
   }
 
   def save(user: User): User = {
@@ -71,5 +70,13 @@ class UserService @Autowired()(userRepository: UserRepository,gridFsOperations: 
     user.setImageUrl(id.toString)
 
     save(user)
+  }
+
+  def userCount():Long={
+    userRepository.count()
+  }
+
+  def exists(userId:String):Boolean={
+    userRepository.existsById(userId)
   }
 }

@@ -3,8 +3,10 @@ package com.joseph
 import java.util
 import java.util.Properties
 
+import com.joseph.security.DashboardAccessFilter
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.http.MediaType
 import org.springframework.http.converter.ByteArrayHttpMessageConverter
@@ -43,8 +45,12 @@ class Application {
     mailSender
   }
 
+
+
+
+
   def supportedMediaTypes: util.List[MediaType] = {
-    val mediaTypes: util.List[MediaType] = new util.ArrayList[MediaType]
+    val mediaTypes = new util.ArrayList[MediaType]
     mediaTypes.add(MediaType.IMAGE_JPEG)
     mediaTypes.add(MediaType.IMAGE_PNG)
     mediaTypes.add(MediaType.IMAGE_GIF)

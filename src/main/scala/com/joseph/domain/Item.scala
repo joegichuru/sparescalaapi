@@ -1,11 +1,11 @@
 package com.joseph.domain
 
-import domain._
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.joseph.domain.domain._
 import javax.validation.constraints.NotNull
 import org.springframework.data.annotation.Id
 import org.springframework.data.geo.Point
-import org.springframework.data.mongodb.core.index.{GeoSpatialIndexed, Indexed}
+import org.springframework.data.mongodb.core.index.{GeoSpatialIndexed, Indexed, TextIndexed}
 import org.springframework.data.mongodb.core.mapping.Document
 
 import scala.beans.BeanProperty
@@ -24,7 +24,10 @@ case class Item() {
   @BeanProperty
   var duration: String = MONTH
   @BeanProperty @NotNull
-  var itemType, description: String = _
+  var itemType:String=_
+  @TextIndexed
+  @BeanProperty @NotNull
+  var description: String = _
   @BeanProperty @NotNull
   var category:Long=0
   @BeanProperty
@@ -32,7 +35,7 @@ case class Item() {
   @BeanProperty
   var lat, lon: Double = _
   @BeanProperty
-  var city:String="Nairobi"
+  var city:String=_
   @BeanProperty
   var amenities: java.util.Set[String] = _
   @BeanProperty

@@ -2,13 +2,14 @@ package com.joseph.dao.services
 
 import java.util
 
-import com.mongodb.BasicDBObject
-import com.mongodb.client.gridfs.model.GridFSFile
 import com.joseph.dao.repositories.{CommentRepository, ItemRepository, LikeRepository}
 import com.joseph.domain.{Comment, Item, Like, User}
+import com.mongodb.BasicDBObject
+import com.mongodb.client.gridfs.model.GridFSFile
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.{Page, PageRequest}
 import org.springframework.data.geo.{Distance, Metrics, Point}
+import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.{Criteria, Query}
 import org.springframework.data.mongodb.gridfs.{GridFsResource, GridFsTemplate}
 import org.springframework.stereotype.Service
@@ -18,7 +19,15 @@ import scala.collection.JavaConverters._
 
 @Service
 class ItemService @Autowired()(itemRepository: ItemRepository, commentRepository: CommentRepository
-                               , gridFsOperations: GridFsTemplate, likeRepository: LikeRepository) {
+                               , gridFsOperations: GridFsTemplate, likeRepository: LikeRepository, mongoTemplate: MongoTemplate) {
+  def suspendByUser(user: User): Unit = {
+    itemRepository.findAllByUser(user).asScala.foreach(item => {
+      item.setIsPublished(false)
+      itemRepository.save(item)
+    })
+  }
+
+
 
 
   //default page sizes is 20
@@ -26,6 +35,7 @@ class ItemService @Autowired()(itemRepository: ItemRepository, commentRepository
     val pageRequest: PageRequest = PageRequest.of(pageno, 20)
     //todo add function to transform items to be user specific
     itemRepository.findAllByOrderByPostedOnDesc(pageRequest)
+
   }
 
   def findAll(): java.util.List[Item] = {
@@ -155,7 +165,24 @@ class ItemService @Autowired()(itemRepository: ItemRepository, commentRepository
     itemRepository.deleteAll(itemRepository.findAllByUser(user))
   }
 
+  def searchByQuery(q: String): util.List[Item] = {
+    val query = new Query()
+    query.addCriteria(Criteria.where("description").regex("/.*" + q + "*/"))
+    val list = mongoTemplate.find(query, classOf[Item])
+    list
+  }
 
+  def searchByQ(q: String): java.util.List[Item] = {
+    itemRepository.findAllBy(s".*${q.trim}*.")
+  }
+
+  def itemsCount(): Long = {
+    itemRepository.count()
+  }
+
+  def likesCount(): Long = {
+    likeRepository.count()
+  }
 
 
 }

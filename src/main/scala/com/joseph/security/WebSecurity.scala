@@ -30,7 +30,11 @@ class WebSecurity @Autowired ()(userDetailsServiceImp:UserDetailServiceImpl,
       .addFilter(new JWTAuthenticationFilter(authenticationManager(),userService))
       .addFilter(new JWTAuthorizationFilter(authenticationManager(),userService))
       .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+    http.antMatcher("/dashboard/**")
+      .addFilter(new DashboardAccessFilter(authenticationManager(),userService))
   }
+
 
   override def configure(auth: AuthenticationManagerBuilder): Unit = {
     auth.userDetailsService(userDetailsServiceImp).passwordEncoder(passwordEncoder)

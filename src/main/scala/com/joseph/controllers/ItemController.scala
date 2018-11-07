@@ -91,11 +91,7 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
   @GetMapping(value = Array("/search"), params = Array("q"))
   @ResponseBody
   def search(@RequestParam("q") query: String, principal: Principal): Any = {
-    val user: User = userService.findByEmail(principal.getName)
-    val item = new Item
-    item.setUser(user)
-    item.setPostedOn(new Date().getTime)
-    itemService.save(item)
+    itemService.searchByQ(query)
   }
 
   /**
