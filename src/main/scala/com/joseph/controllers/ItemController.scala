@@ -51,7 +51,8 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
   @GetMapping(params = Array("page"))
   @ResponseBody
   def findAll(@RequestParam(name = "page") pageNo: Int): Page[Item] = {
-    itemService.findByPage(pageNo)
+    //itemService.findByPage(pageNo)
+    null
   }
 
   /**

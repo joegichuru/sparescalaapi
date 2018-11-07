@@ -47,7 +47,7 @@ class ItemService @Autowired()(itemRepository: ItemRepository, commentRepository
 
   //transform items that are user specific
   def findAll(user: User):java.util.List[Item]={
-    itemRepository.findAllOrderByPostedOnDesc().asScala.map(item=>{
+    itemRepository.findAllOrderByPostedOn().asScala.map(item=>{
       item.setIsLiked(isLiked(user.getId,item.getId))
       item.setLikes(likesCount(item))
       item
