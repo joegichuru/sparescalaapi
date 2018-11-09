@@ -10,6 +10,10 @@ import org.springframework.security.config.annotation.web.configuration.{EnableW
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.cors.{CorsConfigurationSource, UrlBasedCorsConfigurationSource}
+import java.util
+
+import org.springframework.context.annotation.Bean
+import org.springframework.web.cors.CorsConfiguration
 
 @EnableWebSecurity
 @Configuration
@@ -17,7 +21,7 @@ class WebSecurity @Autowired ()(userDetailsServiceImp:UserDetailServiceImpl,
                                  passwordEncoder:BCryptPasswordEncoder,userService:UserService)
   extends WebSecurityConfigurerAdapter{
   override def configure(http: HttpSecurity): Unit = {
-    http.cors().and()
+    http.cors().configurationSource(corsConfigurationSource()).and()
       .csrf()
       .disable()
       .authorizeRequests()
@@ -35,16 +39,19 @@ class WebSecurity @Autowired ()(userDetailsServiceImp:UserDetailServiceImpl,
   }
 
 
+
+  @Bean def corsConfigurationSource(): CorsConfigurationSource = {
+    val configuration = new CorsConfiguration
+    configuration.setAllowedOrigins(util.Arrays.asList("http://localhost/spare-frontend/"))
+    configuration.setAllowedMethods(util.Arrays.asList("GET", "POST"))
+    val source = new UrlBasedCorsConfigurationSource()
+    source.registerCorsConfiguration("/**", configuration)
+    source
+  }
+
+
   override def configure(auth: AuthenticationManagerBuilder): Unit = {
     auth.userDetailsService(userDetailsServiceImp).passwordEncoder(passwordEncoder)
   }
 
-  import org.springframework.context.annotation.Bean
-  import org.springframework.web.cors.CorsConfiguration
-
-  @Bean def corsConfigurationSource: CorsConfigurationSource = {
-    val source = new UrlBasedCorsConfigurationSource
-    source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues)
-    source
-  }
 }
