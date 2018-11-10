@@ -42,7 +42,7 @@ class WebSecurity @Autowired ()(userDetailsServiceImp:UserDetailServiceImpl,
 
   @Bean def corsConfigurationSource(): CorsConfigurationSource = {
     val configuration = new CorsConfiguration
-    configuration.setAllowedOrigins(util.Arrays.asList("http://localhost/spare-frontend/"))
+    configuration.setAllowedOrigins(util.Arrays.asList("http://localhost:80","http://localhost","http://104.238.185.164"))
     configuration.setAllowedMethods(util.Arrays.asList("GET", "POST"))
     val source = new UrlBasedCorsConfigurationSource()
     source.registerCorsConfiguration("/**", configuration)
