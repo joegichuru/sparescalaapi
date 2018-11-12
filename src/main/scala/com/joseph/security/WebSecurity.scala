@@ -2,18 +2,14 @@ package com.joseph.security
 
 import com.joseph.dao.services.UserService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.{Bean, Configuration}
 import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.{EnableWebSecurity, WebSecurityConfigurerAdapter}
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.web.cors.{CorsConfigurationSource, UrlBasedCorsConfigurationSource}
-import java.util
-
-import org.springframework.context.annotation.Bean
-import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.{CorsConfiguration, CorsConfigurationSource, UrlBasedCorsConfigurationSource}
 
 @EnableWebSecurity
 @Configuration
@@ -42,12 +38,36 @@ class WebSecurity @Autowired ()(userDetailsServiceImp:UserDetailServiceImpl,
 
   @Bean def corsConfigurationSource(): CorsConfigurationSource = {
     val configuration = new CorsConfiguration
-    configuration.setAllowedOrigins(util.Arrays.asList("http://localhost:80","http://localhost","http://104.238.185.164"))
-    configuration.setAllowedMethods(util.Arrays.asList("GET", "POST"))
+    configuration.addAllowedHeader("*")
+    configuration.addAllowedOrigin("*")
+    configuration.addAllowedMethod("GET")
+    configuration.addAllowedMethod("POST")
+    configuration.addAllowedMethod("PUT")
+    configuration.addAllowedMethod("OPTIONS")
+    configuration.addAllowedMethod("OPTION")
+    //configuration.addAllowedMethod("*")
     val source = new UrlBasedCorsConfigurationSource()
     source.registerCorsConfiguration("/**", configuration)
     source
   }
+
+//  import org.springframework.boot.web.servlet.FilterRegistrationBean
+//  import org.springframework.context.annotation.Bean
+//  import org.springframework.web.cors.CorsConfiguration
+//
+//  @Bean def corsFilter: FilterRegistrationBean[CorsFilter]= {
+//    val source = new UrlBasedCorsConfigurationSource
+//    val config = new CorsConfiguration
+//    config.setAllowCredentials(true)
+//    config.addAllowedOrigin("*")
+//    config.addAllowedHeader("*")
+//    config.addAllowedMethod("*")
+//    source.registerCorsConfiguration("/**", config)
+//    val bean = new FilterRegistrationBean(new CorsFilter(source))
+//    bean.setOrder(0)
+//    bean
+//  }
+
 
 
   override def configure(auth: AuthenticationManagerBuilder): Unit = {

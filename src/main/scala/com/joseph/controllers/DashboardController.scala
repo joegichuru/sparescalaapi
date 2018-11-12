@@ -1,7 +1,8 @@
 package com.joseph.controllers
 
-import com.joseph.dao.services.{ItemService, UserService}
+import com.joseph.dao.services.{ItemService, UserService, ViewsService}
 import com.joseph.domain.{Item, Status, User}
+import org.json.JSONObject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation._
@@ -15,12 +16,12 @@ import org.springframework.web.bind.annotation._
 
 @Controller
 @RequestMapping(Array("/dashboard"))
-class DashboardController @Autowired()(userService: UserService, itemService: ItemService) {
+class DashboardController @Autowired()(userService: UserService, itemService: ItemService,viewsService: ViewsService) {
 
   @GetMapping
   @ResponseBody
-  def dashboard(): java.util.HashMap[String, Long] = {
-    val body = new java.util.HashMap[String, Long]()
+  def dashboard(): String= {
+    val body = new JSONObject()
 
     val userCount = userService.userCount()
 
@@ -31,8 +32,13 @@ class DashboardController @Autowired()(userService: UserService, itemService: It
     body.put("users", userCount)
     body.put("items", itemsCount)
     body.put("likes", likesCount)
-    body.put("views", 1875)
-    body
+    //fake this too
+    body.put("views", 34)
+    body.put("today",viewsService.today())
+
+    //add fake items weekly
+    //add fake
+    body.toString()
   }
 
   @GetMapping(Array("/users"))
@@ -123,6 +129,7 @@ class DashboardController @Autowired()(userService: UserService, itemService: It
     if (itemService.exists(itemId)) {
       val item = itemService.findOne(itemId)
       item.setIsPublished(false)
+      itemService.save(item)
       new Status("success", "Item unpublished")
     } else {
       new Status("error", "item does not exist")
@@ -135,6 +142,7 @@ class DashboardController @Autowired()(userService: UserService, itemService: It
     if (itemService.exists(itemId)) {
       val item = itemService.findOne(itemId)
       item.setIsPublished(true)
+      itemService.save(item)
       new Status("success", "Item published")
     } else {
       new Status("error", "item does not exist")

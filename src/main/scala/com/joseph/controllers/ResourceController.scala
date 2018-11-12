@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.query.{Criteria, Query}
 import org.springframework.data.mongodb.gridfs.{GridFsResource, GridFsTemplate}
 import org.springframework.http.{CacheControl, HttpHeaders, HttpStatus, ResponseEntity}
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.{GetMapping, PathVariable, RequestMapping, ResponseBody}
+import org.springframework.web.bind.annotation._
 
 @Controller
 @RequestMapping(Array("/resource/p"))
