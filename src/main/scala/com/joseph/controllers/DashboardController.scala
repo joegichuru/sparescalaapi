@@ -148,4 +148,15 @@ class DashboardController @Autowired()(userService: UserService, itemService: It
       new Status("error", "item does not exist")
     }
   }
+
+  @GetMapping(Array("/users/between"))
+  @ResponseBody
+  def usersBetween(@RequestParam("start") start:Long,@RequestParam("end") end:Long):java.util.ArrayList[User]={
+    userService.userBetween(start,end)
+  }
+  @GetMapping(Array("/items/between"))
+  @ResponseBody
+  def itemsBetween(@RequestParam("start") start:Long,@RequestParam("end") end:Long):java.util.ArrayList[Item]={
+    itemService.itemBetween(start,end)
+  }
 }

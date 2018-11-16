@@ -1,5 +1,7 @@
 package com.joseph.dao.services
 
+import java.util
+
 import com.joseph.dao.repositories.UserRepository
 import com.joseph.domain.User
 import com.mongodb.BasicDBObject
@@ -79,4 +81,6 @@ class UserService @Autowired()(userRepository: UserRepository,gridFsOperations: 
   def exists(userId:String):Boolean={
     userRepository.existsById(userId)
   }
+
+  def userBetween(start:Long,end:Long): util.ArrayList[User] =userRepository.findAllByCreatedOnBetween(start,end)
 }

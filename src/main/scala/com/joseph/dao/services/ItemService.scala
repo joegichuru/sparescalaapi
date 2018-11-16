@@ -205,6 +205,6 @@ class ItemService @Autowired()(itemRepository: ItemRepository, commentRepository
     likeRepository.count()
   }
 
-
+  def itemBetween(start:Long,end:Long): util.ArrayList[Item] =itemRepository.findAllByPostedOnBetween(start,end)
 
 }

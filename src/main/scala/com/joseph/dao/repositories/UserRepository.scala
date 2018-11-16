@@ -7,4 +7,6 @@ trait UserRepository extends MongoRepository[User,String]{
   def existsByEmail(email:String): Boolean
 
   def findOneByEmail(email:String):User
+
+  def findAllByCreatedOnBetween(start:Long,end:Long):java.util.ArrayList[User];
 }

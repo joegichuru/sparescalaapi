@@ -23,4 +23,5 @@ trait ItemRepository extends PagingAndSortingRepository[Item, String] {
   @Query("{$or : [{'name': { $regex: ?0, $options:'i' }}, {'description': { $regex: ?0, $options:'i' }}]}")
   def findAllBy(q:String):java.util.List[Item]
 
+  def findAllByPostedOnBetween(start:Long,end:Long):java.util.ArrayList[Item]
 }
