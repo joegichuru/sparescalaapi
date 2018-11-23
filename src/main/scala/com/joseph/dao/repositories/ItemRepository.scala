@@ -26,4 +26,6 @@ trait ItemRepository extends PagingAndSortingRepository[Item, String] {
   def findAllBy(q:String):java.util.List[Item]
 
   def findAllByPostedOnBetween(start:Long,end:Long):java.util.ArrayList[Item]
+
+  def findAllByPostedOnGreaterThan(time:Long):java.util.List[Item]
 }

@@ -5,6 +5,7 @@ import java.util
 import com.joseph.dao.repositories.UserRepository
 import com.joseph.domain.User
 import com.mongodb.BasicDBObject
+import org.json.JSONObject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.gridfs.GridFsTemplate
 import org.springframework.stereotype.Service
@@ -83,4 +84,8 @@ class UserService @Autowired()(userRepository: UserRepository,gridFsOperations: 
   }
 
   def userBetween(start:Long,end:Long): util.ArrayList[User] =userRepository.findAllByCreatedOnBetween(start,end)
+
+  def usersYearly(): JSONObject ={
+
+  }
 }

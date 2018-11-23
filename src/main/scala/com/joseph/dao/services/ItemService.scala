@@ -1,11 +1,13 @@
 package com.joseph.dao.services
 
 import java.util
+import java.util.{Calendar, Date}
 
 import com.joseph.dao.repositories.{CommentRepository, ItemRepository, LikeRepository}
 import com.joseph.domain.{Comment, Item, Like, User}
 import com.mongodb.BasicDBObject
 import com.mongodb.client.gridfs.model.GridFSFile
+import org.json.JSONObject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.{Page, PageRequest}
 import org.springframework.data.geo.{Distance, Metrics, Point}
@@ -219,6 +221,46 @@ class ItemService @Autowired()(itemRepository: ItemRepository, commentRepository
     likeRepository.count()
   }
 
-  def itemBetween(start:Long,end:Long): util.ArrayList[Item] =itemRepository.findAllByPostedOnBetween(start,end)
+  def itemBetween(start:Long,end:Long): util.ArrayList[Item] ={
+    itemRepository.findAllByPostedOnBetween(start+(24*60*60),end)
+  }
+
+  def findAllThisWeek() :java.util.List[Item]={
+    val time=new Date().getTime
+    itemRepository.findAllByPostedOnGreaterThan(time)
+  }
+
+  def weeklyPosts():JSONObject={
+    //find all this week
+    //create mutable map of days
+    //update days count
+    val items=findAllThisWeek()
+    val days=new util.HashMap[String,Long]()
+    days.put("mon",0)
+    days.put("tue",0)
+    days.put("wed",0)
+    days.put("thu",0)
+    days.put("fri",0)
+    days.put("sat",0)
+    days.put("sun",0)
+
+    items.asScala.foreach(i=>{
+      val calender=Calendar.getInstance()
+      calender.setTimeInMillis(i.getPostedOn)
+       calender.get(Calendar.DAY_OF_WEEK) match{
+         case Calendar.MONDAY=>days.put("mon",days.get("mon")+1)
+         case Calendar.TUESDAY=>days.put("tue",days.get("tue")+1)
+         case Calendar.WEDNESDAY=>days.put("wed",days.get("wed")+1)
+         case Calendar.THURSDAY=>days.put("thu",days.get("thu")+1)
+         case Calendar.FRIDAY=>days.put("fri",days.get("fri")+1)
+         case Calendar.SATURDAY=>days.put("sat",days.get("sat")+1)
+         case Calendar.SUNDAY=>days.put("sun",days.get("sun")+1)
+      }
+    })
+    new JSONObject(days)
+
+  }
+
+
 
 }

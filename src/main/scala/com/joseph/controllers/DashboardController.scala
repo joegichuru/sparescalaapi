@@ -37,6 +37,7 @@ class DashboardController @Autowired()(userService: UserService, itemService: It
     body.put("likes", likesCount)
     body.put("views", viewsService.findCount())
     body.put("today",viewsService.today())
+    body.put("weekly",itemService.weeklyPosts())
 
     //add fake items weekly
     //add fake

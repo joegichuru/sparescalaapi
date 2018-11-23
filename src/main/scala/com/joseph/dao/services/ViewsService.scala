@@ -4,7 +4,7 @@ import java.util.{Calendar, Date}
 
 import com.joseph.dao.repositories.ViewsRepository
 import com.joseph.domain.{Item, User, View}
-import org.json.JSONObject
+import org.json.{JSONArray, JSONObject}
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -22,11 +22,13 @@ class ViewsService @Autowired()(viewsRepository: ViewsRepository) {
 
   def findCount():Long=viewsRepository.count()
 
-  def today():String={
+  def today():JSONArray={
     val date=new Date()
     val views=viewsRepository.findAllByCreatedGreaterThanOrderByCreatedDesc(date.getTime-(3600*60*6))
     //tranform into hourly items
     var jsonContainer=new JSONObject()
+    var arr=new JSONArray()
+
     //get 1 hr
     var times=views.asScala.map(v=>{
       var d=new Date(v.getCreated)
@@ -35,9 +37,12 @@ class ViewsService @Autowired()(viewsRepository: ViewsRepository) {
       calender.get(Calendar.HOUR_OF_DAY)
     }).toList
     val s=times.toSet
-    var d=s.map(e=>jsonContainer.put(e.toString, times.count(_==e)))
-    //jsonContainer.put("weekly",d.mkString)
+    s.foreach(e=>arr.put(new JSONObject().put(e.toString, times.count(_==e))))
+   // jsonContainer.put("weekly",d.mkString)
    // d.mkString
-    jsonContainer.toString()
+
+    arr
   }
+
+
 }
