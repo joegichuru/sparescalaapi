@@ -160,4 +160,17 @@ class UserController @Autowired()(userService: UserService, bCryptPasswordEncode
     user
 
   }
+
+  @PostMapping(Array("/admin"))
+  @ResponseBody
+  def makeAdmin(
+                    principal: Principal): User = {
+    val user = userService.findByEmail(principal.getName)
+    user.setRole(Roles.ADMIN)
+    userService.save(user)
+
+    user
+
+  }
+
 }
