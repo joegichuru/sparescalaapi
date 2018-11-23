@@ -6,7 +6,7 @@ import java.util
 import java.util.Date
 
 import scala.collection.JavaConversions._
-import com.joseph.dao.services.{ItemService, ServiceUtils, UserService}
+import com.joseph.dao.services.{ItemService, ServiceUtils, UserService, ViewsService}
 import com.joseph.domain.{Comment, Item, _}
 import domain._
 import javax.websocket.server.PathParam
@@ -19,7 +19,8 @@ import org.springframework.web.multipart.MultipartFile
 
 @RestController()
 @RequestMapping(Array("/items"))
-class ItemController @Autowired()(itemService: ItemService, userService: UserService,serviceUtils: ServiceUtils) {
+class ItemController @Autowired()(itemService: ItemService, userService: UserService,
+                                  serviceUtils: ServiceUtils,viewsService: ViewsService) {
 
   /**
     * finds all items with no parameters
@@ -240,6 +241,14 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
       new Status(status = "success", message = "Item liked.")
     }
 
+  }
+
+  @PostMapping(value = Array("/{itemId}/view"))
+  def view(@PathVariable("itemId")itemId:String,principal: Principal):Status={
+    val user = userService.findByEmail(principal.getName)
+    val item=itemService.findOne(itemId)
+    viewsService.registerView(user,item)
+    new Status(status = "success",message = "Viewed")
   }
 
   @PostMapping(value = Array("/post"))

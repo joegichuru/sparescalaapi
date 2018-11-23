@@ -13,6 +13,8 @@ trait ItemRepository extends PagingAndSortingRepository[Item, String] {
 
   override def findAll(): java.util.List[Item]
 
+  def findAllByIsPublishedTrue(): java.util.List[Item]
+
   def findByPointNearOrderByPoint(point: Point, distance: Distance, pageable: Pageable): Page[Item]
 
   def findByPointNear(point: Point, distance: Distance): java.util.List[Item]

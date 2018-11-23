@@ -19,7 +19,6 @@ class User {
   @BeanProperty
   var imageUrl: String = _
   @BeanProperty
-  @JsonIgnore
   var role: String = Roles.REGULAR
   @BeanProperty
   @JsonIgnore

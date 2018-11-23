@@ -36,8 +36,14 @@ class ItemService @Autowired()(itemRepository: ItemRepository, commentRepository
 
   }
 
+
+
   def findAll(): java.util.List[Item] = {
     itemRepository.findAll()
+  }
+
+  def findAllActive(): java.util.List[Item] = {
+    itemRepository.findAllByIsPublishedTrue()
   }
 
   //number of likes on individual items
@@ -48,6 +54,14 @@ class ItemService @Autowired()(itemRepository: ItemRepository, commentRepository
   //transform items that are user specific
   def findAll(user: User):java.util.List[Item]={
     itemRepository.findAll().asScala.map(item=>{
+      item.setIsLiked(isLiked(user.getId,item.getId))
+      item.setLikes(likesCount(item))
+      item
+    }).asJava
+
+  }
+  def findAllActive(user: User):java.util.List[Item]={
+    itemRepository.findAllByIsPublishedTrue().asScala.map(item=>{
       item.setIsLiked(isLiked(user.getId,item.getId))
       item.setLikes(likesCount(item))
       item

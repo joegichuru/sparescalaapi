@@ -1,11 +1,14 @@
 package com.joseph.controllers
 
+import java.security.Principal
+
 import com.joseph.dao.services.{ItemService, UserService, ViewsService}
 import com.joseph.domain.{Item, Status, User}
 import org.json.JSONObject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation._
+import scala.collection.JavaConverters._
 
 /**
   * Controller for all administration actions
@@ -32,8 +35,7 @@ class DashboardController @Autowired()(userService: UserService, itemService: It
     body.put("users", userCount)
     body.put("items", itemsCount)
     body.put("likes", likesCount)
-    //fake this too
-    body.put("views", 34)
+    body.put("views", viewsService.findCount())
     body.put("today",viewsService.today())
 
     //add fake items weekly
@@ -43,8 +45,10 @@ class DashboardController @Autowired()(userService: UserService, itemService: It
 
   @GetMapping(Array("/users"))
   @ResponseBody
-  def findAllUsers(): java.util.List[User] = {
-    userService.findAll()
+  def findAllUsers(principal:Principal): java.util.List[User] = {
+    userService.findAll().asScala.dropWhile(_.email==principal.getName).asJava
+    //return all users except the current one
+
   }
 
   @GetMapping(Array("/users/{userId}"))
