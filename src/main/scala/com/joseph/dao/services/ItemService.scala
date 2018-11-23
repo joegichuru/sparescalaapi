@@ -227,7 +227,7 @@ class ItemService @Autowired()(itemRepository: ItemRepository, commentRepository
 
   def findAllThisWeek() :java.util.List[Item]={
     val time=new Date().getTime
-    itemRepository.findAllByPostedOnGreaterThan(time-(7*24*60*60))
+    itemRepository.findAllByPostedOnGreaterThan(time-(604800000))
   }
 
   def weeklyPosts():JSONObject={
