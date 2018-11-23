@@ -227,7 +227,7 @@ class ItemService @Autowired()(itemRepository: ItemRepository, commentRepository
 
   def findAllThisWeek() :java.util.List[Item]={
     val time=new Date().getTime
-    itemRepository.findAllByPostedOnGreaterThan(time)
+    itemRepository.findAllByPostedOnGreaterThan(time-(7*24*60*60))
   }
 
   def weeklyPosts():JSONObject={
@@ -257,7 +257,12 @@ class ItemService @Autowired()(itemRepository: ItemRepository, commentRepository
          case Calendar.SUNDAY=>days.put("sun",days.get("sun")+1)
       }
     })
-    new JSONObject(days)
+    val k=days.asScala.keys
+    val v=days.asScala.values
+    val on=new JSONObject()
+    on.put("labels",k.toList.asJava)
+    on.put("series",v.toList.asJava)
+    on
 
   }
 
