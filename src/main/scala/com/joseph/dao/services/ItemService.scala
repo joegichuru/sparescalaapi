@@ -261,7 +261,9 @@ class ItemService @Autowired()(itemRepository: ItemRepository, commentRepository
     val v=days.asScala.values
     val on=new JSONObject()
     on.put("labels",k.toList.asJava)
-    on.put("series",v.toList.asJava)
+    val m=v.toList.asJava
+    val finalList=List(m)
+    on.put("series",finalList.asJava)
     on
 
   }
