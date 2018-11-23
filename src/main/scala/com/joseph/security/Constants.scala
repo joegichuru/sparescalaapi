@@ -8,7 +8,7 @@ object Constants {
   val SIGN_UP_URL="/auth/signup"
   val FILE_URLS="/resource/p/**"
   val ACTIVATE="/auth/activate/**"
-  val PASSWORD_RESET="/password/reset"
+  val PASSWORD_RESET="/auth/password/reset"
   val SWAGGER="/swagger-resources**"
   val SWAGGER2="/swagger-resources/**"
   val API_DOCS="/v2/api-docs"
