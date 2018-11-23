@@ -34,9 +34,9 @@ class ItemController @Autowired()(itemService: ItemService, userService: UserSer
   def findAll(principle: Principal): java.util.List[Item] = {
     if(userService.existByEmail(principle.getName)){
       val user=userService.findByEmail(principle.getName)
-      itemService.findAll(user)
+      itemService.findAllActive(user)
     }else{
-      itemService.findAll()
+      itemService.findAllActive()
     }
 
   }
